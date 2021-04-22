@@ -1,67 +1,51 @@
 package com.springpetclinic.model;
 
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name= "pets")
 public class Pet extends  BaseEntity
 {
+    @Builder
+    public Pet(Long id, String name, PetType petType, Owner owner, LocalDate birthDate, Set<Visit> visits) {
+        super(id);
+        this.name = name;
+        this.petType = petType;
+        this.owner = owner;
+        this.birthDate = birthDate;
+
+        if (visits == null || visits.size() > 0 ) {
+            this.visits = visits;
+        }
+    }
     @Column(name = "name")
     String name;
 
     @ManyToOne
-    @Column(name = "owner_id")
+    @JoinColumn(name = "owner_id")
     Owner owner;
 
     @ManyToOne
-    @Column(name = "pet_id")
+    @JoinColumn(name = "pet_id")
     PetType petType;
+
     @Column(name = "birth_date")
-    LocalDate bithday;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
     Set<Visit> visits = new HashSet<>();
 
-    public Owner getOwner() {
-        return owner;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setOwner(Owner owner) {
-        this.owner = owner;
-    }
-
-    public PetType getPetType() {
-        return petType;
-    }
-
-    public void setPetType(PetType petType) {
-        this.petType = petType;
-    }
-
-    public LocalDate getBithday() {
-        return bithday;
-    }
-
-    public void setBithday(LocalDate bithday) {
-        this.bithday = bithday;
-    }
-
-    public Set<Visit> getVisit() {
-        return visits;
-    }
-
-    public void setVisit(Set<Visit> visits) {
-        this.visits = visits;
-    }
 }

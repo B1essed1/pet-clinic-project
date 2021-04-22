@@ -11,7 +11,6 @@ public abstract class AbstractMapService<T extends BaseEntity,ID extends Long>
 
     Set<T> findAll()
     {
-
         return new HashSet<>(map.values());
     }
 
@@ -28,13 +27,13 @@ public abstract class AbstractMapService<T extends BaseEntity,ID extends Long>
             {
                 object.setId(getNextId());
             }
+
+            map.put(object.getId(),object);
         }
         else
             {
             throw new RuntimeException("Object can not be null");
         }
-
-        map.put(object.getId(), object);
         return object;
     }
 
@@ -47,14 +46,16 @@ public abstract class AbstractMapService<T extends BaseEntity,ID extends Long>
     {
         map.remove(id);
     }
+
     Long getNextId()
     {
         Long nextId = null;
         try
         {
-            return nextId = Collections.max(map.keySet())+1;
+           nextId = Collections.max(map.keySet())+1;
         } catch (NoSuchElementException e){
             return nextId = 1l;
         }
+        return nextId;
     }
 }
